@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  finman-gateway-service:
+    image: finman-gateway-service:latest  # Specify the image name and tag
+    container_name: finman-gateway-container
+    build:
+      dockerfile: Dockerfile
+      context: .
+    environment:
+      FINMAN_USER_URL: finman-user-service:8081
+      FINMAN_TRANSACTION_URL: finman-transaction-service:8082
+      FINMAN_AUTH_URL: finman-auth-service:8080
+      PORT: 8085
+      IP: 0.0.0.0
+    ports:
+      - "8085:8085"
+    depends_on:
+      - postgres
+    networks:
+      - finman-network
+    restart: always
+
+networks:
+  finman-network:
+    driver: bridge
+    external: true
+
+volumes:
+  postgres-user-data:
+ 
