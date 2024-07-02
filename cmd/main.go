@@ -71,7 +71,7 @@ func main() {
 	api.AppendAuthorizer("/", adapter.NewAuthorizer(roleClient, tokenService))
 
 	api.SetContact(openapi.Contact{Name: "Hope Golestany", Email: "hopegolestany@gmail.com", URL: "https://github.com/nullexp"})
-	api.SetInfo(openapi.Info{Version: "1", Description: "Api definition for finman", Title: "Finman Api Definition"})
+	api.SetInfo(openapi.Info{Version: "1", Description: "This is the API documentation for the FinMan User Service. Use these APIs to access and manage user resources", Title: "Finman Api Definition"})
 	api.SetLogPolicy(model.LogPolicy{LogBody: false, LogEnabled: false})
 	api.SetCors([]string{"http://localhost:8085"})
 	if err != nil {
