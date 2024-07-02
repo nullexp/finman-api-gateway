@@ -12,20 +12,20 @@ import (
 const SessionBaseURL = "/sessions"
 
 func NewSession(client authv1.AuthServiceClient) httpapi.Module {
-	return Session{client: client}
+	return SessionHandler{client: client}
 }
 
-type Session struct {
+type SessionHandler struct {
 	client authv1.AuthServiceClient
 }
 
-func (s Session) GetRequestHandlers() []*httpapi.RequestDefinition {
+func (s SessionHandler) GetRequestHandlers() []*httpapi.RequestDefinition {
 	return []*httpapi.RequestDefinition{
 		s.PostSession(),
 	}
 }
 
-func (s Session) GetBaseURL() string {
+func (s SessionHandler) GetBaseURL() string {
 	return SessionBaseURL
 }
 
@@ -34,14 +34,14 @@ const (
 	SessionDescription = "Authenticate through these apis"
 )
 
-func (s Session) GetTag() openapi.Tag {
+func (s SessionHandler) GetTag() openapi.Tag {
 	return openapi.Tag{
 		Name:        SessionManagement,
 		Description: SessionDescription,
 	}
 }
 
-func (s Session) PostSession() *httpapi.RequestDefinition {
+func (s SessionHandler) PostSession() *httpapi.RequestDefinition {
 	return &httpapi.RequestDefinition{
 		Route:     "",
 		Dto:       &CreateTokenRequest{},
@@ -61,6 +61,10 @@ func (s Session) PostSession() *httpapi.RequestDefinition {
 		Handler: func(req httpapi.Request) {
 			dto := req.MustGetDTO().(*CreateTokenRequest)
 			token, err := s.client.Login(context.Background(), &authv1.LoginRequest{Username: dto.Username, Password: dto.Password})
+			if err != nil {
+				req.SetBadRequest(PleaseReadTheErrorCode, err.Error())
+				return
+			}
 			req.Negotiate(http.StatusCreated, err, token)
 		},
 	}

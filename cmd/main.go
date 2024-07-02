@@ -61,7 +61,7 @@ func main() {
 	api.AppendAuthorizer("/", adapter.NewAuthorizer(roleClient, tokenService))
 
 	api.SetContact(openapi.Contact{Name: "Hope Golestany", Email: "hopegolestany@gmail.com", URL: "https://github.com/nullexp"})
-	api.SetInfo(openapi.Info{Version: "0.1", Description: "Api definition for finman", Title: "Finman Api Definition"})
+	api.SetInfo(openapi.Info{Version: "1", Description: "Api definition for finman", Title: "Finman Api Definition"})
 	api.SetLogPolicy(model.LogPolicy{LogBody: false, LogEnabled: false})
 	api.SetCors([]string{"http://localhost:8085"})
 	if err != nil {
@@ -73,6 +73,9 @@ func main() {
 
 	user := http.NewUser(userClient, tokenService)
 	api.AppendModule(user)
+
+	role := http.NewRole(roleClient)
+	api.AppendModule(role)
 
 	portValue, err := strconv.Atoi(port)
 	if err != nil {
