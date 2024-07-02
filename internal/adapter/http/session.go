@@ -41,8 +41,6 @@ func (s Session) GetTag() openapi.Tag {
 	}
 }
 
-const RouteRefresh = "/refresh"
-
 func (s Session) PostSession() *httpapi.RequestDefinition {
 	return &httpapi.RequestDefinition{
 		Route:     "",

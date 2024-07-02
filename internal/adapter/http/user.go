@@ -15,7 +15,7 @@ import (
 const UserBaseURL = "/users"
 
 func NewUser(client userv1.UserServiceClient, parser model.SubjectParser) httpapi.Module {
-	return User{client: client}
+	return User{client: client, parser: parser}
 }
 
 type User struct {
