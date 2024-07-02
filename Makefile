@@ -13,30 +13,33 @@ buf:
 	mkdir -p "./proto/user/v1"
 	mkdir -p "./proto/transaction/v1"
 	mkdir -p "./proto/auth/v1"
-	curl -o ./proto/user/v1/user.proto https://raw.githubusercontent.com/nullexp/finman-user-service/main/proto/user/v1/user.proto
-	curl -o ./proto/transaction/v1/transaction.proto https://raw.githubusercontent.com/nullexp/finman-transaction-service/main/proto/transaction/v1/transaction.proto
+	mkdir -p "./proto/role/v1"
+	curl -o .\proto\user\v1\user.proto https://raw.githubusercontent.com/nullexp/finman-user-service/main/proto/user/v1/user.proto
+	curl -o .\proto\user\v1\role.proto https://raw.githubusercontent.com/nullexp/finman-user-service/main/proto/user/v1/role.proto
+	curl -o .\proto\transaction\v1\transaction.proto https://raw.githubusercontent.com/nullexp/finman-transaction-service/main/proto/transaction/v1/transaction.proto
+	curl -o .\proto\auth\v1\auth.proto https://raw.githubusercontent.com/nullexp/finman-auth-service/main/proto/auth/v1/auth.proto
 	@env PATH="$$PATH:$$(go env GOPATH)/bin" buf generate --template proto/buf.gen.yaml proto
 	@echo "✅ buf done!"
 	rm -rf "./proto/user"
 	rm -rf "./proto/transaction"
-
+	rm -rf "./proto/role"
 
 buf-win:
 	mkdir ".\proto\user\v1"
 	mkdir ".\proto\transaction\v1"
 	mkdir ".\proto\auth\v1"
+	mkdir ".\proto\role\v1"
 	curl -o .\proto\user\v1\user.proto https://raw.githubusercontent.com/nullexp/finman-user-service/main/proto/user/v1/user.proto
+	curl -o .\proto\user\v1\role.proto https://raw.githubusercontent.com/nullexp/finman-user-service/main/proto/user/v1/role.proto
 	curl -o .\proto\transaction\v1\transaction.proto https://raw.githubusercontent.com/nullexp/finman-transaction-service/main/proto/transaction/v1/transaction.proto
-	curl -o .\proto\auth\v1\auth.proto https://raw.githubusercontent.com/nullexp/finman-api-gateway/main/proto/auth/v1/auth.proto
+	curl -o .\proto\auth\v1\auth.proto https://raw.githubusercontent.com/nullexp/finman-auth-service/main/proto/auth/v1/auth.proto
 	@set PATH=%PATH%;%GOPATH%\bin
 	@buf generate --template proto\buf.gen.yaml proto
 	@echo "✅ buf done!"
 	rmdir /S /Q ".\proto\user"
 	rmdir /S /Q ".\proto\transaction"
 	rmdir /S /Q ".\proto\auth"
-
-
-
+	rmdir /S /Q ".\proto\role"
 
 run:
 	go run ./cmd

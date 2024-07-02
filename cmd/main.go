@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 	"strconv"
@@ -40,17 +41,6 @@ func main() {
 	port := os.Getenv("PORT")
 	ip := os.Getenv("IP")
 
-	tokenService := adapter.NewTokenService(jwtSecret, 10)
-
-	api.AppendAuthenticator("/", tokenService)
-	api.SetContact(openapi.Contact{Name: "Hope Golestany", Email: "hopegolestany@gmail.com", URL: "https://github.com/nullexp"})
-	api.SetInfo(openapi.Info{Version: "0.1", Description: "Api definition for finman", Title: "Finman Api Definition"})
-	api.SetLogPolicy(model.LogPolicy{LogBody: false, LogEnabled: false})
-	api.SetCors([]string{"http://localhost:8085"})
-	if err != nil {
-		log.Fatalln(err)
-	}
-
 	authConn, err := establishGRPCConnection(authUrl, 10)
 	if err != nil {
 		log.Fatalf("Failed to connect: %v", err)
@@ -65,6 +55,34 @@ func main() {
 
 	authClient := authv1.NewAuthServiceClient(authConn)
 	userClient := userv1.NewUserServiceClient(userConn)
+	roleClient := userv1.NewRoleServiceClient(userConn)
+	tokenService := adapter.NewTokenService(jwtSecret, 10)
+
+	api.AppendAuthenticator("/", tokenService)
+	api.AppendAuthorizer("/", func(identity, permission string) (bool, error) {
+
+		sub := tokenService.MustParseSubject(identity)
+		if sub.IsAdmin {
+			return true, nil
+		}
+		rs, err := roleClient.IsUserPermittedToPermission(context.Background(), &userv1.IsUserPermittedToPermissionRequest{
+			UserId:     sub.UserId,
+			Permission: permission,
+		})
+
+		if err != nil {
+			return false, err
+		}
+		return rs.IsPermitted, nil
+	})
+
+	api.SetContact(openapi.Contact{Name: "Hope Golestany", Email: "hopegolestany@gmail.com", URL: "https://github.com/nullexp"})
+	api.SetInfo(openapi.Info{Version: "0.1", Description: "Api definition for finman", Title: "Finman Api Definition"})
+	api.SetLogPolicy(model.LogPolicy{LogBody: false, LogEnabled: false})
+	api.SetCors([]string{"http://localhost:8085"})
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	auth := http.NewSession(authClient)
 	api.AppendModule(auth)

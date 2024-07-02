@@ -2,7 +2,6 @@ package http
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"time"
 
@@ -47,9 +46,10 @@ func (s User) GetTag() openapi.Tag {
 
 func (s User) GetAllUsers() *httpapi.RequestDefinition {
 	return &httpapi.RequestDefinition{
-		Route:     "",
-		Method:    http.MethodPost,
-		FreeRoute: false,
+		Route:          "",
+		Method:         http.MethodPost,
+		FreeRoute:      false,
+		AnyPermissions: []string{"ManageUsers"},
 		ResponseDefinitions: []httpapi.ResponseDefinition{
 			{
 				Status:      http.StatusOK,
@@ -58,9 +58,6 @@ func (s User) GetAllUsers() *httpapi.RequestDefinition {
 			},
 		},
 		Handler: func(req httpapi.Request) {
-			caller := req.MustGetCaller()
-			sub := s.parser.MustParseSubject(caller.GetSubject())
-			log.Println(sub)
 			users, err := s.client.GetAllUsers(context.Background(), &userv1.GetAllUsersRequest{})
 			req.Negotiate(http.StatusCreated, err, users)
 		},
