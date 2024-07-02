@@ -42,7 +42,6 @@ func (s TransactionHandler) GetRequestHandlers() []*httpapi.RequestDefinition {
 		s.GetAllTransactions(),
 		s.UpdateTransaction(),
 		s.DeleteTransaction(),
-		s.GetTransactionsWithPagination(),
 	}
 }
 
@@ -314,50 +313,6 @@ func (s TransactionHandler) DeleteTransaction() *httpapi.RequestDefinition {
 				return
 			}
 			req.ReturnStatus(http.StatusNoContent, err)
-		},
-	}
-}
-
-func (s TransactionHandler) GetTransactionsWithPagination() *httpapi.RequestDefinition {
-	return &httpapi.RequestDefinition{
-		Route:          "/paginate",
-		Method:         http.MethodGet,
-		FreeRoute:      false,
-		Dto:            &GetTransactionsWithPaginationRequest{},
-		AnyPermissions: []string{"ManageTransactions"},
-		ResponseDefinitions: []httpapi.ResponseDefinition{
-			{
-				Status:      http.StatusOK,
-				Description: "If everything is fine",
-				Dto:         &GetTransactionsWithPaginationResponse{},
-			},
-		},
-		Handler: func(req httpapi.Request) {
-			dto := req.MustGetDTO().(*GetTransactionsWithPaginationRequest)
-			resp, err := s.client.GetTransactionsWithPagination(context.Background(), &transactionv1.GetTransactionsWithPaginationRequest{
-				Offset: int32(dto.Offset),
-				Limit:  int32(dto.Limit),
-			})
-			if err != nil {
-				req.SetBadRequest(PleaseReadTheErrorCode, err.Error())
-				return
-			}
-			transactions := make([]Transaction, len(resp.Transactions))
-			for i, txn := range resp.Transactions {
-				transactions[i] = Transaction{
-					Id:          txn.Id,
-					UserId:      txn.UserId,
-					Type:        txn.Type,
-					Amount:      txn.Amount,
-					Date:        MustParseTime(txn.Date),
-					Description: txn.Description,
-					CreatedAt:   MustParseTime(txn.CreatedAt),
-					UpdatedAt:   MustParseTime(txn.UpdatedAt),
-				}
-			}
-			req.Negotiate(http.StatusOK, err, GetTransactionsWithPaginationResponse{
-				Transactions: transactions,
-			})
 		},
 	}
 }

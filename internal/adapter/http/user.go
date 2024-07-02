@@ -30,7 +30,6 @@ func (s UserHandler) GetRequestHandlers() []*httpapi.RequestDefinition {
 		s.GetUserById(),
 		s.UpdateUser(),
 		s.DeleteUser(),
-		s.GetUsersWithPagination(),
 	}
 }
 
@@ -201,48 +200,6 @@ func (s UserHandler) DeleteUser() *httpapi.RequestDefinition {
 				return
 			}
 			req.ReturnStatus(http.StatusOK, nil)
-		},
-	}
-}
-
-func (s UserHandler) GetUsersWithPagination() *httpapi.RequestDefinition {
-	return &httpapi.RequestDefinition{
-		Route:          "/pagination",
-		Method:         http.MethodGet,
-		FreeRoute:      false,
-		Dto:            &GetUsersWithPaginationRequest{},
-		AnyPermissions: []string{"ManageUsers"},
-		ResponseDefinitions: []httpapi.ResponseDefinition{
-			{
-				Status:      http.StatusOK,
-				Description: "If everything is fine",
-				Dto:         &GetUsersWithPaginationResponse{},
-			},
-		},
-		Handler: func(req httpapi.Request) {
-			p, _ := req.GetPagination()
-			resp, err := s.client.GetUsersWithPagination(context.Background(), &userv1.GetUsersWithPaginationRequest{
-				Limit:  int32(p.GetLimit()),
-				Offset: int32(p.GetSkip()),
-			})
-			if err != nil {
-				req.SetBadRequest(PleaseReadTheErrorCode, err.Error())
-				return
-			}
-			users := make([]UserReadable, len(resp.Users))
-			for i, user := range resp.Users {
-				users[i] = UserReadable{
-					Id:        user.Id,
-					Username:  user.Username,
-					RoleId:    user.RoleId,
-					IsAdmin:   user.IsAdmin,
-					CreatedAt: MustParseTime(user.CreatedAt),
-					UpdatedAt: MustParseTime(user.UpdatedAt),
-				}
-			}
-			req.Negotiate(http.StatusOK, nil, GetUsersWithPaginationResponse{
-				Users: users,
-			})
 		},
 	}
 }
