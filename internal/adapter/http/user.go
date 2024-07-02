@@ -50,7 +50,7 @@ func (s User) GetAllUsers() *httpapi.RequestDefinition {
 		ResponseDefinitions: []httpapi.ResponseDefinition{
 			{
 				Status:      http.StatusOK,
-				Description: "I everything is fine",
+				Description: "If everything is fine",
 				Dto:         &GetAllUsersResponse{},
 			},
 		},
