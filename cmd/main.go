@@ -11,6 +11,7 @@ import (
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 
+	adapter "github.com/nullexp/finman-api-gateway/internal/adapter"
 	authv1 "github.com/nullexp/finman-api-gateway/internal/adapter/grpc/auth/v1"
 	userv1 "github.com/nullexp/finman-api-gateway/internal/adapter/grpc/user/v1"
 
@@ -35,10 +36,13 @@ func main() {
 
 	authUrl := os.Getenv("FINMAN_AUTH_URL")
 	userUrl := os.Getenv("FINMAN_USER_URL")
-
+	jwtSecret := os.Getenv("JWT_SECRET")
 	port := os.Getenv("PORT")
 	ip := os.Getenv("IP")
 
+	tokenService := adapter.NewTokenService(jwtSecret, 10)
+
+	api.AppendAuthenticator("/", tokenService)
 	api.SetContact(openapi.Contact{Name: "Hope Golestany", Email: "hopegolestany@gmail.com", URL: "https://github.com/nullexp"})
 	api.SetInfo(openapi.Info{Version: "0.1", Description: "Api definition for finman", Title: "Finman Api Definition"})
 	api.SetLogPolicy(model.LogPolicy{LogBody: false, LogEnabled: false})
@@ -65,7 +69,7 @@ func main() {
 	auth := http.NewSession(authClient)
 	api.AppendModule(auth)
 
-	user := http.NewUser(userClient)
+	user := http.NewUser(userClient, tokenService)
 	api.AppendModule(user)
 
 	portValue, err := strconv.Atoi(port)

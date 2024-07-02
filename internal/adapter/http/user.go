@@ -2,22 +2,25 @@ package http
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"time"
 
 	userv1 "github.com/nullexp/finman-api-gateway/internal/adapter/grpc/user/v1"
+	"github.com/nullexp/finman-api-gateway/internal/port/model"
 	httpapi "github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol"
 	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol/model/openapi"
 )
 
 const UserBaseURL = "/users"
 
-func NewUser(client userv1.UserServiceClient) httpapi.Module {
+func NewUser(client userv1.UserServiceClient, parser model.SubjectParser) httpapi.Module {
 	return User{client: client}
 }
 
 type User struct {
 	client userv1.UserServiceClient
+	parser model.SubjectParser
 }
 
 func (s User) GetRequestHandlers() []*httpapi.RequestDefinition {
@@ -45,8 +48,8 @@ func (s User) GetTag() openapi.Tag {
 func (s User) GetAllUsers() *httpapi.RequestDefinition {
 	return &httpapi.RequestDefinition{
 		Route:     "",
-		FreeRoute: true,
 		Method:    http.MethodPost,
+		FreeRoute: false,
 		ResponseDefinitions: []httpapi.ResponseDefinition{
 			{
 				Status:      http.StatusOK,
@@ -55,6 +58,9 @@ func (s User) GetAllUsers() *httpapi.RequestDefinition {
 			},
 		},
 		Handler: func(req httpapi.Request) {
+			caller := req.MustGetCaller()
+			sub := s.parser.MustParseSubject(caller.GetSubject())
+			log.Println(sub)
 			users, err := s.client.GetAllUsers(context.Background(), &userv1.GetAllUsersRequest{})
 			req.Negotiate(http.StatusCreated, err, users)
 		},

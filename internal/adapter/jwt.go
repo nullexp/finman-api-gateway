@@ -10,8 +10,8 @@ import (
 
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
-	driven "github.com/nullexp/finman-api-gateway/internal/port"
 	"github.com/nullexp/finman-api-gateway/internal/port/model"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/misc"
 )
 
 // TokenService is a struct that manages JWT tokens.
@@ -129,7 +129,20 @@ func (ts TokenService) GetSubject(subject string) (out model.Subject, err error)
 	return
 }
 
+func (ts TokenService) MustParseSubject(subject string) (out model.Subject) {
+	data, err := base64.RawStdEncoding.DecodeString(subject)
+	if err != nil {
+		panic(err)
+	}
+	err = json.Unmarshal(data, &out)
+	return
+}
+
+func (ts TokenService) GetModel(token string) (misc.JwtClaim, error) {
+	return ts.GetToken(token)
+}
+
 // NewValidJwtClaim creates a new valid JWT claim with the given expiration time.
-func NewValidJwtClaim(expireTime time.Duration) driven.JwtClaim {
+func NewValidJwtClaim(expireTime time.Duration) misc.JwtClaim {
 	return model.StandardClaims{ExpiresAt: time.Now().Add(expireTime).Unix()}
 }

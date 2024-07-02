@@ -8,6 +8,8 @@ services:
       dockerfile: Dockerfile
       context: .
     environment:
+      JWT_SECRET: eDM!":jmx2/QoHBlY'.O8e4?Uy,",9
+      JWT_EXPIRE_MINUTE: 20
       FINMAN_USER_URL: finman-user-service:8081
       FINMAN_TRANSACTION_URL: finman-transaction-service:8082
       FINMAN_AUTH_URL: finman-auth-service:8080

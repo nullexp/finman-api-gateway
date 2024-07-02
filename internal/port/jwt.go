@@ -8,16 +8,6 @@ type Claims interface {
 	Valid() error
 }
 
-type JwtClaim interface {
-	GetExpireTime() int64
-	GetSubject() string
-	GetIssuer() string
-	GetAudience() []string
-	GetIssuedAt() int64
-	GetIdentity() string
-	IsExpired() bool
-}
-
 type TokenService interface {
 	CreateToken(sb model.Subject) (string, error)
 	GetToken(tokenString string) (model.StandardClaims, error)
