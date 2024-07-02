@@ -13,6 +13,7 @@ import (
 
 	adapter "github.com/nullexp/finman-api-gateway/internal/adapter"
 	authv1 "github.com/nullexp/finman-api-gateway/internal/adapter/grpc/auth/v1"
+	txv1 "github.com/nullexp/finman-api-gateway/internal/adapter/grpc/transaction/v1"
 	userv1 "github.com/nullexp/finman-api-gateway/internal/adapter/grpc/user/v1"
 
 	"github.com/nullexp/finman-api-gateway/internal/adapter/http"
@@ -36,6 +37,8 @@ func main() {
 
 	authUrl := os.Getenv("FINMAN_AUTH_URL")
 	userUrl := os.Getenv("FINMAN_USER_URL")
+	txUrl := os.Getenv("FINMAN_TRANSACTION_URL")
+
 	jwtSecret := os.Getenv("JWT_SECRET")
 	port := os.Getenv("PORT")
 	ip := os.Getenv("IP")
@@ -52,9 +55,16 @@ func main() {
 	}
 	defer authConn.Close()
 
+	transactionConn, err := establishGRPCConnection(txUrl, 10)
+	if err != nil {
+		log.Fatalf("Failed to connect: %v", err)
+	}
+	defer authConn.Close()
+
 	authClient := authv1.NewAuthServiceClient(authConn)
 	userClient := userv1.NewUserServiceClient(userConn)
 	roleClient := userv1.NewRoleServiceClient(userConn)
+	txClient := txv1.NewTransactionServiceClient(transactionConn)
 	tokenService := adapter.NewTokenService(jwtSecret, 10)
 
 	api.AppendAuthenticator("/", tokenService)
@@ -76,6 +86,9 @@ func main() {
 
 	role := http.NewRole(roleClient)
 	api.AppendModule(role)
+
+	tx := http.NewTransaction(txClient, tokenService)
+	api.AppendModule(tx)
 
 	portValue, err := strconv.Atoi(port)
 	if err != nil {

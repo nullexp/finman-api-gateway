@@ -66,6 +66,38 @@ func (s RoleHandler) GetAllRoles() *httpapi.RequestDefinition {
 	}
 }
 
+func (s RoleHandler) PostRoles() *httpapi.RequestDefinition {
+	return &httpapi.RequestDefinition{
+		Route:          "",
+		Description:    "Please note that permissions can be these: ManageRoles ManageUsers ManageTransactions",
+		Method:         http.MethodPost,
+		FreeRoute:      false,
+		Dto:            &CreateRoleRequest{},
+		AnyPermissions: []string{"ManageRoles"},
+		ResponseDefinitions: []httpapi.ResponseDefinition{
+			{
+				Status:      http.StatusOK,
+				Description: "If everything is fine",
+				Dto:         &CreateRoleResponse{},
+			},
+		},
+		Handler: func(req httpapi.Request) {
+			dto := req.MustGetDTO().(*CreateRoleRequest)
+			resp, err := s.client.CreateRole(context.Background(), &userv1.CreateRoleRequest{
+				Name:        dto.Name,
+				Permissions: dto.Permissions,
+			})
+			if err != nil {
+				req.SetBadRequest(PleaseReadTheErrorCode, err.Error())
+				return
+			}
+			req.Negotiate(http.StatusCreated, err, CreateRoleResponse{
+				Id: resp.Id,
+			})
+		},
+	}
+}
+
 type Role struct {
 	Id          string    `json:"id"`
 	Name        string    `json:"name"`
