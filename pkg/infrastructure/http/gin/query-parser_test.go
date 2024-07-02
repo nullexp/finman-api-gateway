@@ -3,7 +3,7 @@ package gin
 import (
 	"testing"
 
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/misc"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/misc"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -12,14 +12,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
-	errorProtocol "github.com/nullexp/finman-gateway-service/pkg/infrastructure/error/protocol"
-	fileProtocol "github.com/nullexp/finman-gateway-service/pkg/infrastructure/file/protocol"
-	httpapi "github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol/model"
-	mutipartmodel "github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol/model/multipart"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol/response"
-	logger "github.com/nullexp/finman-gateway-service/pkg/infrastructure/log"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/misc"
+	errorProtocol "github.com/nullexp/finman-api-gateway/pkg/infrastructure/error/protocol"
+	fileProtocol "github.com/nullexp/finman-api-gateway/pkg/infrastructure/file/protocol"
+	httpapi "github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol/model"
+	mutipartmodel "github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol/model/multipart"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol/response"
+	logger "github.com/nullexp/finman-api-gateway/pkg/infrastructure/log"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/misc"
 	gah "github.com/timewasted/go-accept-headers"
 )
 

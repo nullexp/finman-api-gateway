@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol/model/openapi"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/misc"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol/model/openapi"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/misc"
 	"github.com/stretchr/testify/assert"
 )
 

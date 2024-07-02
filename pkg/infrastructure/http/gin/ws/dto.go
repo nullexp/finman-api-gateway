@@ -3,7 +3,7 @@ package ws
 import (
 	"encoding/json"
 
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/misc"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/misc"
 )
 
 type JsonDtoMessage struct {

@@ -11,8 +11,8 @@ import (
 	"os"
 	"time"
 
-	fileProtocol "github.com/nullexp/finman-gateway-service/pkg/infrastructure/file/protocol"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/misc"
+	fileProtocol "github.com/nullexp/finman-api-gateway/pkg/infrastructure/file/protocol"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/misc"
 )
 
 var ErrMessageTooLarge = errors.New("multipart: message too large")

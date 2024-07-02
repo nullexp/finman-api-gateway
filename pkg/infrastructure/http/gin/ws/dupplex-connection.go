@@ -2,8 +2,8 @@ package ws
 
 import (
 	"github.com/gorilla/websocket"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol/model"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/misc"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol/model"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/misc"
 )
 
 type DuplexConnection struct {

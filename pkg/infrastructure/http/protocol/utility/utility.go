@@ -1,6 +1,6 @@
 package utility
 
-import "github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol"
+import "github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol"
 
 func GetByType[T any](key string, r protocol.Request) ([]*T, bool) {
 	raw, ok := r.Get(key)

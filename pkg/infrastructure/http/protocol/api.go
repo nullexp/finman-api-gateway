@@ -7,10 +7,10 @@ import (
 	"net/http/httptest"
 	"net/textproto"
 
-	fileProtocol "github.com/nullexp/finman-gateway-service/pkg/infrastructure/file/protocol"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol/model"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol/model/openapi"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/misc"
+	fileProtocol "github.com/nullexp/finman-api-gateway/pkg/infrastructure/file/protocol"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol/model"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol/model/openapi"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/misc"
 )
 
 type (

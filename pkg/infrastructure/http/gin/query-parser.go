@@ -4,9 +4,9 @@ import (
 	"strings"
 	"time"
 
-	genericErrors "github.com/nullexp/finman-gateway-service/pkg/infrastructure/error"
-	errorProtocol "github.com/nullexp/finman-gateway-service/pkg/infrastructure/error/protocol"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/misc"
+	genericErrors "github.com/nullexp/finman-api-gateway/pkg/infrastructure/error"
+	errorProtocol "github.com/nullexp/finman-api-gateway/pkg/infrastructure/error/protocol"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/misc"
 )
 
 func ParseQuery(def misc.QueryDefinition, qvalue string) (misc.Query, error) {

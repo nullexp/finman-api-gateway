@@ -11,10 +11,10 @@ COPY . .
 RUN go mod tidy
 
 # Build the Go application
-RUN go build -o finman-gateway-service ./cmd/
+RUN go build -o finman-api-gateway ./cmd/
 
 # Expose port 8081 to the outside world
 EXPOSE 8081
 
 # Run the executable
-CMD ["./finman-gateway-service"]
+CMD ["./finman-api-gateway"]

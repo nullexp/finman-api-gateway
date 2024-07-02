@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 
 	"github.com/ldez/mimetype"
-	http "github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol"
+	http "github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol"
 )
 
 type jsonMultipart struct {

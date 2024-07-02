@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	authv1 "github.com/nullexp/finman-gateway-service/internal/adapter/grpc/auth/v1"
-	httpapi "github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol/model/openapi"
+	authv1 "github.com/nullexp/finman-api-gateway/internal/adapter/grpc/auth/v1"
+	httpapi "github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol/model/openapi"
 )
 
 const SessionBaseURL = "/sessions"

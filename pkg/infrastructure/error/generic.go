@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/go-playground/validator"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/error/protocol"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/error/protocol"
 )
 
 const (

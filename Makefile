@@ -27,7 +27,7 @@ buf-win:
 	mkdir ".\proto\auth\v1"
 	curl -o .\proto\user\v1\user.proto https://raw.githubusercontent.com/nullexp/finman-user-service/main/proto/user/v1/user.proto
 	curl -o .\proto\transaction\v1\transaction.proto https://raw.githubusercontent.com/nullexp/finman-transaction-service/main/proto/transaction/v1/transaction.proto
-	curl -o .\proto\auth\v1\auth.proto https://raw.githubusercontent.com/nullexp/finman-auth-service/main/proto/auth/v1/auth.proto
+	curl -o .\proto\auth\v1\auth.proto https://raw.githubusercontent.com/nullexp/finman-api-gateway/main/proto/auth/v1/auth.proto
 	@set PATH=%PATH%;%GOPATH%\bin
 	@buf generate --template proto\buf.gen.yaml proto
 	@echo "✅ buf done!"
@@ -49,10 +49,10 @@ test:
 	go test ./...
 
 docker-build:
-	docker build -t finman-gateway-service .
+	docker build -t finman-api-gateway .
 
 docker-run:
-	docker run -p 8081:8081 finman-gateway-service
+	docker run -p 8081:8081 finman-api-gateway
 
 docker-compose-up:
 	docker-compose up --build 

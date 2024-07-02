@@ -1,6 +1,6 @@
 package protocol
 
-import "github.com/nullexp/finman-gateway-service/pkg/infrastructure/misc"
+import "github.com/nullexp/finman-api-gateway/pkg/infrastructure/misc"
 
 type Authenticator interface {
 	GetModel(token string) (misc.JwtClaim, error)

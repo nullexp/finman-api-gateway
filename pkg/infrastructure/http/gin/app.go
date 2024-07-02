@@ -21,13 +21,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/gorilla/websocket"
-	wsmodel "github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/gin/ws"
-	httpapi "github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol"
-	model "github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol/model"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol/model/openapi"
-	response "github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol/response"
-	logger "github.com/nullexp/finman-gateway-service/pkg/infrastructure/log"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/misc"
+	wsmodel "github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/gin/ws"
+	httpapi "github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol"
+	model "github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol/model"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol/model/openapi"
+	response "github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol/response"
+	logger "github.com/nullexp/finman-api-gateway/pkg/infrastructure/log"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/misc"
 )
 
 //go:embed asset/swagger

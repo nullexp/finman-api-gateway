@@ -14,9 +14,9 @@ import (
 
 	"github.com/disintegration/imaging"
 	"github.com/h2non/filetype"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/file/afero/utility"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/file/protocol"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/log"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/file/afero/utility"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/file/protocol"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/log"
 	"github.com/spf13/afero"
 )
 

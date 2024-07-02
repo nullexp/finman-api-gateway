@@ -3,7 +3,7 @@ package gin
 import (
 	"net/http"
 
-	httpapi "github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol"
+	httpapi "github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol"
 )
 
 type PermissionManager struct {

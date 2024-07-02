@@ -11,12 +11,14 @@ import (
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 
-	authv1 "github.com/nullexp/finman-gateway-service/internal/adapter/grpc/auth/v1"
-	"github.com/nullexp/finman-gateway-service/internal/adapter/http"
-	ginapi "github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/gin"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol/model"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol/model/openapi"
-	logger "github.com/nullexp/finman-gateway-service/pkg/infrastructure/log"
+	authv1 "github.com/nullexp/finman-api-gateway/internal/adapter/grpc/auth/v1"
+	userv1 "github.com/nullexp/finman-api-gateway/internal/adapter/grpc/user/v1"
+
+	"github.com/nullexp/finman-api-gateway/internal/adapter/http"
+	ginapi "github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/gin"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol/model"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol/model/openapi"
+	logger "github.com/nullexp/finman-api-gateway/pkg/infrastructure/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -32,6 +34,8 @@ func main() {
 	api := ginapi.NewGinApp()
 
 	authUrl := os.Getenv("FINMAN_AUTH_URL")
+	userUrl := os.Getenv("FINMAN_USER_URL")
+
 	port := os.Getenv("PORT")
 	ip := os.Getenv("IP")
 
@@ -43,15 +47,26 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	conn, err := establishGRPCConnection(authUrl, 10)
+	authConn, err := establishGRPCConnection(authUrl, 10)
 	if err != nil {
 		log.Fatalf("Failed to connect: %v", err)
 	}
-	defer conn.Close()
+	defer authConn.Close()
 
-	authClient := authv1.NewAuthServiceClient(conn)
+	userConn, err := establishGRPCConnection(userUrl, 10)
+	if err != nil {
+		log.Fatalf("Failed to connect: %v", err)
+	}
+	defer authConn.Close()
+
+	authClient := authv1.NewAuthServiceClient(authConn)
+	userClient := userv1.NewUserServiceClient(userConn)
+
 	auth := http.NewSession(authClient)
 	api.AppendModule(auth)
+
+	user := http.NewUser(userClient)
+	api.AppendModule(user)
 
 	portValue, err := strconv.Atoi(port)
 	if err != nil {

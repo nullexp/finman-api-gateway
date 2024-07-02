@@ -1,8 +1,8 @@
 version: '3.8'
 
 services:
-  finman-gateway-service:
-    image: finman-gateway-service:latest  # Specify the image name and tag
+  finman-api-gateway:
+    image: finman-api-gateway:latest  # Specify the image name and tag
     container_name: finman-gateway-container
     build:
       dockerfile: Dockerfile

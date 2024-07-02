@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	httpapi "github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/misc"
+	httpapi "github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/misc"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -9,10 +9,10 @@ import (
 	"strconv"
 	"strings"
 
-	httpapi "github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol/model/openapi"
-	response "github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol/response"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/misc"
+	httpapi "github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol/model/openapi"
+	response "github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol/response"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/misc"
 )
 
 const (

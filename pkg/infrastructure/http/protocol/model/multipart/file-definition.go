@@ -7,8 +7,8 @@ import (
 
 	"github.com/h2non/filetype"
 	"github.com/h2non/filetype/types"
-	http "github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/misc"
+	http "github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/misc"
 )
 
 type FileDefinition struct {

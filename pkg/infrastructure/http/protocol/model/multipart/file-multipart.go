@@ -3,8 +3,8 @@ package multipart
 import (
 	"time"
 
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/file/protocol"
-	http "github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/file/protocol"
+	http "github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol"
 )
 
 type filePart struct {

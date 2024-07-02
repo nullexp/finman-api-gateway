@@ -4,7 +4,7 @@ import (
 	"os"
 	"syscall"
 
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/file/protocol"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/file/protocol"
 	"github.com/spf13/afero"
 )
 

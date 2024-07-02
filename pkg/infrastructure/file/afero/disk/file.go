@@ -7,9 +7,9 @@ import (
 	"sync"
 	"time"
 
-	aferoUtil "github.com/nullexp/finman-gateway-service/pkg/infrastructure/file/afero/utility"
-	protocol "github.com/nullexp/finman-gateway-service/pkg/infrastructure/file/protocol"
-	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/log"
+	aferoUtil "github.com/nullexp/finman-api-gateway/pkg/infrastructure/file/afero/utility"
+	protocol "github.com/nullexp/finman-api-gateway/pkg/infrastructure/file/protocol"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/log"
 	"github.com/spf13/afero"
 )
 
