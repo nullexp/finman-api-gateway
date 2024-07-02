@@ -22,7 +22,7 @@ type RoleHandler struct {
 
 func (s RoleHandler) GetRequestHandlers() []*httpapi.RequestDefinition {
 	return []*httpapi.RequestDefinition{
-		s.GetAllRoles(),
+		s.GetAllRoles(), s.PostRoles(),
 	}
 }
 
