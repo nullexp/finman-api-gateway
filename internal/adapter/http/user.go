@@ -25,7 +25,12 @@ type UserHandler struct {
 
 func (s UserHandler) GetRequestHandlers() []*httpapi.RequestDefinition {
 	return []*httpapi.RequestDefinition{
-		s.GetAllUsers(), s.PostUsers(),
+		s.GetAllUsers(),
+		s.PostUsers(),
+		s.GetUserById(),
+		s.UpdateUser(),
+		s.DeleteUser(),
+		s.GetUsersWithPagination(),
 	}
 }
 
@@ -35,7 +40,7 @@ func (s UserHandler) GetBaseURL() string {
 
 const (
 	UserManagement  = "User Management"
-	UserDescription = "Use these apis to access user resources"
+	UserDescription = "Use these APIs to access user resources"
 )
 
 func (s UserHandler) GetTag() openapi.Tag {
@@ -96,6 +101,147 @@ func (s UserHandler) PostUsers() *httpapi.RequestDefinition {
 			}
 			req.Negotiate(http.StatusCreated, err, CreateUserResponse{
 				Id: resp.Id,
+			})
+		},
+	}
+}
+
+func (s UserHandler) GetUserById() *httpapi.RequestDefinition {
+	return &httpapi.RequestDefinition{
+		Route:          "/:id",
+		Method:         http.MethodGet,
+		FreeRoute:      false,
+		Dto:            &GetUserByIdRequest{},
+		AnyPermissions: []string{"ManageUsers"},
+		Parameters:     simpleIdParamDef,
+		ResponseDefinitions: []httpapi.ResponseDefinition{
+			{
+				Status:      http.StatusOK,
+				Description: "If everything is fine",
+				Dto:         &GetUserByIdResponse{},
+			},
+		},
+		Handler: func(req httpapi.Request) {
+			id := req.MustGet(idDef.GetName()).(string)
+			resp, err := s.client.GetUserById(context.Background(), &userv1.GetUserByIdRequest{
+				Id: id,
+			})
+			if err != nil {
+				req.SetBadRequest(PleaseReadTheErrorCode, err.Error())
+				return
+			}
+			req.Negotiate(http.StatusOK, nil, GetUserByIdResponse{
+				User: UserReadable{
+					Id:        resp.User.Id,
+					Username:  resp.User.Username,
+					RoleId:    resp.User.RoleId,
+					IsAdmin:   resp.User.IsAdmin,
+					CreatedAt: MustParseTime(resp.User.CreatedAt),
+					UpdatedAt: MustParseTime(resp.User.UpdatedAt),
+				},
+			})
+		},
+	}
+}
+
+func (s UserHandler) UpdateUser() *httpapi.RequestDefinition {
+	return &httpapi.RequestDefinition{
+		Route:          "/:id",
+		Method:         http.MethodPut,
+		FreeRoute:      false,
+		Dto:            &UpdateUserRequest{},
+		AnyPermissions: []string{"ManageUsers"},
+		Parameters:     simpleIdParamDef,
+		ResponseDefinitions: []httpapi.ResponseDefinition{
+			{
+				Status:      http.StatusOK,
+				Description: "If everything is fine",
+				Dto:         &GetUserByIdResponse{},
+			},
+		},
+		Handler: func(req httpapi.Request) {
+			id := req.MustGet(idDef.GetName()).(string)
+			dto := req.MustGetDTO().(*UpdateUserRequest)
+			_, err := s.client.UpdateUser(context.Background(), &userv1.UpdateUserRequest{
+				Id:       id,
+				Password: dto.Password,
+				RoleId:   dto.RoleId,
+			})
+			if err != nil {
+				req.SetBadRequest(PleaseReadTheErrorCode, err.Error())
+				return
+			}
+			req.Negotiate(http.StatusOK, nil, nil)
+		},
+	}
+}
+
+func (s UserHandler) DeleteUser() *httpapi.RequestDefinition {
+	return &httpapi.RequestDefinition{
+		Route:          "/:id",
+		Method:         http.MethodDelete,
+		FreeRoute:      false,
+		Dto:            &DeleteUserRequest{},
+		AnyPermissions: []string{"ManageUsers"},
+		Parameters:     simpleIdParamDef,
+		ResponseDefinitions: []httpapi.ResponseDefinition{
+			{
+				Status:      http.StatusOK,
+				Description: "If everything is fine",
+				Dto:         nil,
+			},
+		},
+		Handler: func(req httpapi.Request) {
+			id := req.MustGet(idDef.GetName()).(string)
+			_, err := s.client.DeleteUser(context.Background(), &userv1.DeleteUserRequest{
+				Id: id,
+			})
+			if err != nil {
+				req.SetBadRequest(PleaseReadTheErrorCode, err.Error())
+				return
+			}
+			req.ReturnStatus(http.StatusOK, nil)
+		},
+	}
+}
+
+func (s UserHandler) GetUsersWithPagination() *httpapi.RequestDefinition {
+	return &httpapi.RequestDefinition{
+		Route:          "/pagination",
+		Method:         http.MethodGet,
+		FreeRoute:      false,
+		Dto:            &GetUsersWithPaginationRequest{},
+		AnyPermissions: []string{"ManageUsers"},
+		ResponseDefinitions: []httpapi.ResponseDefinition{
+			{
+				Status:      http.StatusOK,
+				Description: "If everything is fine",
+				Dto:         &GetUsersWithPaginationResponse{},
+			},
+		},
+		Handler: func(req httpapi.Request) {
+			p, _ := req.GetPagination()
+			resp, err := s.client.GetUsersWithPagination(context.Background(), &userv1.GetUsersWithPaginationRequest{
+				Limit:  int32(p.GetLimit()),
+				Offset: int32(p.GetSkip()),
+			})
+			if err != nil {
+				req.SetBadRequest(PleaseReadTheErrorCode, err.Error())
+				return
+			}
+			users := make([]UserReadable, len(resp.Users))
+			for i, user := range resp.Users {
+				users[i] = UserReadable{
+					Id:        user.Id,
+					Username:  user.Username,
+					RoleId:    user.RoleId,
+					IsAdmin:   user.IsAdmin,
+					CreatedAt: MustParseTime(user.CreatedAt),
+					UpdatedAt: MustParseTime(user.UpdatedAt),
+				}
+			}
+			req.Negotiate(http.StatusOK, nil, GetUsersWithPaginationResponse{
+				Users: users,
 			})
 		},
 	}
