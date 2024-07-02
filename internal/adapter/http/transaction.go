@@ -11,12 +11,21 @@ import (
 
 	httpapi "github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol"
 	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/http/protocol/model/openapi"
+	"github.com/nullexp/finman-api-gateway/pkg/infrastructure/misc"
 )
 
 const TransactionBaseURL = "/transactions"
 
 func NewTransaction(client transactionv1.TransactionServiceClient, parser model.SubjectParser) httpapi.Module {
 	return TransactionHandler{client: client, parser: parser}
+}
+
+var idDef = misc.NewQueryDefinition(misc.Id,
+	[]misc.QueryOperator{misc.QueryOperatorEqual},
+	misc.DataTypeString)
+
+var simpleIdParamDef = []httpapi.RequestParameter{
+	{Definition: idDef, Query: false, Optional: false},
 }
 
 type TransactionHandler struct {
@@ -91,10 +100,10 @@ func (s TransactionHandler) CreateTransaction() *httpapi.RequestDefinition {
 
 func (s TransactionHandler) GetTransactionById() *httpapi.RequestDefinition {
 	return &httpapi.RequestDefinition{
-		Route:     "/{id}",
-		Method:    http.MethodGet,
-		FreeRoute: false,
-		Dto:       &GetTransactionByIdRequest{},
+		Route:      "/:id",
+		Method:     http.MethodGet,
+		FreeRoute:  false,
+		Parameters: simpleIdParamDef,
 		ResponseDefinitions: []httpapi.ResponseDefinition{
 			{
 				Status:      http.StatusOK,
@@ -103,9 +112,9 @@ func (s TransactionHandler) GetTransactionById() *httpapi.RequestDefinition {
 			},
 		},
 		Handler: func(req httpapi.Request) {
-			dto := req.MustGetDTO().(*GetTransactionByIdRequest)
+			id := req.MustGet(idDef.GetName()).(string)
 			resp, err := s.client.GetTransactionById(context.Background(), &transactionv1.GetTransactionByIdRequest{
-				Id: dto.Id,
+				Id: id,
 			})
 			if err != nil {
 				req.SetBadRequest(PleaseReadTheErrorCode, err.Error())
@@ -129,11 +138,11 @@ func (s TransactionHandler) GetTransactionById() *httpapi.RequestDefinition {
 
 func (s TransactionHandler) GetTransactionsByUserId() *httpapi.RequestDefinition {
 	return &httpapi.RequestDefinition{
-		Route:          "/user/{userId}",
+		Route:          "/user/:id",
 		Method:         http.MethodGet,
 		FreeRoute:      false,
+		Parameters:     simpleIdParamDef,
 		AnyPermissions: []string{"ManageTransactions"},
-		Dto:            &GetTransactionsByUserIdRequest{},
 		ResponseDefinitions: []httpapi.ResponseDefinition{
 			{
 				Status:      http.StatusOK,
@@ -142,9 +151,9 @@ func (s TransactionHandler) GetTransactionsByUserId() *httpapi.RequestDefinition
 			},
 		},
 		Handler: func(req httpapi.Request) {
-			dto := req.MustGetDTO().(*GetTransactionsByUserIdRequest)
+			id := req.MustGet(idDef.GetName()).(string)
 			resp, err := s.client.GetTransactionsByUserId(context.Background(), &transactionv1.GetTransactionsByUserIdRequest{
-				UserId: dto.UserId,
+				UserId: id,
 			})
 			if err != nil {
 				req.SetBadRequest(PleaseReadTheErrorCode, err.Error())
@@ -172,10 +181,9 @@ func (s TransactionHandler) GetTransactionsByUserId() *httpapi.RequestDefinition
 
 func (s TransactionHandler) GetOwnTransactionById() *httpapi.RequestDefinition {
 	return &httpapi.RequestDefinition{
-		Route:     "/own/{id}",
+		Route:     "/own/:id",
 		Method:    http.MethodGet,
 		FreeRoute: false,
-		Dto:       &GetOwnTransactionByIdRequest{},
 		ResponseDefinitions: []httpapi.ResponseDefinition{
 			{
 				Status:      http.StatusOK,
@@ -186,9 +194,9 @@ func (s TransactionHandler) GetOwnTransactionById() *httpapi.RequestDefinition {
 		Handler: func(req httpapi.Request) {
 			caller := req.MustGetCaller()
 			sub := s.parser.MustParseSubject(caller.GetSubject())
-			dto := req.MustGetDTO().(*GetOwnTransactionByIdRequest)
+			id := req.MustGet(idDef.GetName()).(string)
 			resp, err := s.client.GetOwnTransactionById(context.Background(), &transactionv1.GetOwnTransactionByIdRequest{
-				Id:     dto.Id,
+				Id:     id,
 				UserId: sub.UserId,
 			})
 			if err != nil {
@@ -252,9 +260,10 @@ func (s TransactionHandler) GetAllTransactions() *httpapi.RequestDefinition {
 
 func (s TransactionHandler) UpdateTransaction() *httpapi.RequestDefinition {
 	return &httpapi.RequestDefinition{
-		Route:          "/{id}",
+		Route:          "/:id",
 		Method:         http.MethodPut,
 		FreeRoute:      false,
+		Parameters:     simpleIdParamDef,
 		Dto:            &UpdateTransactionRequest{},
 		AnyPermissions: []string{"ManageTransactions"},
 		ResponseDefinitions: []httpapi.ResponseDefinition{
@@ -264,9 +273,10 @@ func (s TransactionHandler) UpdateTransaction() *httpapi.RequestDefinition {
 			},
 		},
 		Handler: func(req httpapi.Request) {
+			id := req.MustGet(idDef.GetName()).(string)
 			dto := req.MustGetDTO().(*UpdateTransactionRequest)
 			_, err := s.client.UpdateTransaction(context.Background(), &transactionv1.UpdateTransactionRequest{
-				Id:          dto.Id,
+				Id:          id,
 				UserId:      dto.UserId,
 				Type:        dto.Type,
 				Amount:      dto.Amount,
@@ -283,7 +293,7 @@ func (s TransactionHandler) UpdateTransaction() *httpapi.RequestDefinition {
 
 func (s TransactionHandler) DeleteTransaction() *httpapi.RequestDefinition {
 	return &httpapi.RequestDefinition{
-		Route:          "/{id}",
+		Route:          "/:id",
 		Method:         http.MethodDelete,
 		FreeRoute:      false,
 		Dto:            &DeleteTransactionRequest{},
@@ -295,9 +305,9 @@ func (s TransactionHandler) DeleteTransaction() *httpapi.RequestDefinition {
 			},
 		},
 		Handler: func(req httpapi.Request) {
-			dto := req.MustGetDTO().(*DeleteTransactionRequest)
+			id := req.MustGet(idDef.GetName()).(string)
 			_, err := s.client.DeleteTransaction(context.Background(), &transactionv1.DeleteTransactionRequest{
-				Id: dto.Id,
+				Id: id,
 			})
 			if err != nil {
 				req.SetBadRequest(PleaseReadTheErrorCode, err.Error())
