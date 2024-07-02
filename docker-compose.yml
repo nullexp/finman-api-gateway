@@ -15,8 +15,6 @@ services:
       IP: 0.0.0.0
     ports:
       - "8085:8085"
-    depends_on:
-      - postgres
     networks:
       - finman-network
     restart: always
