@@ -11,8 +11,8 @@ import (
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 
-	authv1 "github.com/nullexp/finman-gateway-service/grpc/auth/v1"
-	"github.com/nullexp/finman-gateway-service/http"
+	authv1 "github.com/nullexp/finman-gateway-service/internal/adapter/grpc/auth/v1"
+	"github.com/nullexp/finman-gateway-service/internal/adapter/http"
 	ginapi "github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/gin"
 	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol/model"
 	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol/model/openapi"

@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	authv1 "github.com/nullexp/finman-gateway-service/grpc/auth/v1"
+	authv1 "github.com/nullexp/finman-gateway-service/internal/adapter/grpc/auth/v1"
 	httpapi "github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol"
 	"github.com/nullexp/finman-gateway-service/pkg/infrastructure/http/protocol/model/openapi"
 )
