@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"log"
 	"os"
 	"strconv"
@@ -59,22 +58,7 @@ func main() {
 	tokenService := adapter.NewTokenService(jwtSecret, 10)
 
 	api.AppendAuthenticator("/", tokenService)
-	api.AppendAuthorizer("/", func(identity, permission string) (bool, error) {
-
-		sub := tokenService.MustParseSubject(identity)
-		if sub.IsAdmin {
-			return true, nil
-		}
-		rs, err := roleClient.IsUserPermittedToPermission(context.Background(), &userv1.IsUserPermittedToPermissionRequest{
-			UserId:     sub.UserId,
-			Permission: permission,
-		})
-
-		if err != nil {
-			return false, err
-		}
-		return rs.IsPermitted, nil
-	})
+	api.AppendAuthorizer("/", adapter.NewAuthorizer(roleClient, tokenService))
 
 	api.SetContact(openapi.Contact{Name: "Hope Golestany", Email: "hopegolestany@gmail.com", URL: "https://github.com/nullexp"})
 	api.SetInfo(openapi.Info{Version: "0.1", Description: "Api definition for finman", Title: "Finman Api Definition"})

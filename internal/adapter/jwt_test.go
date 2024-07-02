@@ -1,4 +1,4 @@
-package driven
+package adapter
 
 import (
 	"encoding/base64"
