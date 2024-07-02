@@ -107,12 +107,11 @@ func (s UserHandler) PostUsers() *httpapi.RequestDefinition {
 
 func (s UserHandler) GetUserById() *httpapi.RequestDefinition {
 	return &httpapi.RequestDefinition{
-		Route:          "/:id",
-		Method:         http.MethodGet,
-		FreeRoute:      false,
-		Dto:            &GetUserByIdRequest{},
-		AnyPermissions: []string{"ManageUsers"},
-		Parameters:     simpleIdParamDef,
+		Route:      "/:id",
+		Method:     http.MethodGet,
+		FreeRoute:  false,
+		Dto:        &GetUserByIdRequest{},
+		Parameters: simpleIdParamDef,
 		ResponseDefinitions: []httpapi.ResponseDefinition{
 			{
 				Status:      http.StatusOK,
