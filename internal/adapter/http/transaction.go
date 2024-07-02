@@ -55,10 +55,11 @@ func (s TransactionHandler) GetTag() openapi.Tag {
 
 func (s TransactionHandler) CreateTransaction() *httpapi.RequestDefinition {
 	return &httpapi.RequestDefinition{
-		Route:     "",
-		Method:    http.MethodPost,
-		FreeRoute: false,
-		Dto:       &CreateTransactionRequest{},
+		Route:       "",
+		Method:      http.MethodPost,
+		FreeRoute:   false,
+		Dto:         &CreateTransactionRequest{},
+		Description: "Note that type can be deposit or withdrawal",
 		ResponseDefinitions: []httpapi.ResponseDefinition{
 			{
 				Status:      http.StatusOK,
@@ -373,9 +374,9 @@ type Transaction struct {
 }
 
 type CreateTransactionRequest struct {
-	Type        string `json:"type" validate:"required,oneof=deposit withdrawal"`
-	Amount      int64  `json:"amount" validate:"required,gt=0"`
-	Description string `json:"description"`
+	Type        string `json:"type" validate:"required,oneof=deposit withdrawal" example:"withdrawal"`
+	Amount      int64  `json:"amount" validate:"required,gt=0" `
+	Description string `json:"description" example:"samole"`
 }
 
 func (dto CreateTransactionRequest) Validate(ctx context.Context) error {

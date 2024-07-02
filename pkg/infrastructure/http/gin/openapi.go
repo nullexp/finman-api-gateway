@@ -740,13 +740,14 @@ func GetSchemaField(desc schemaTypeDescription, method httpapi.HTTPMethod) (out 
 		out[Items] = map[string]string{
 			Type:        desc.Type,
 			Format:      desc.Format,
-			Example:     desc.Example,
 			Description: desc.Description,
 		}
 	} else {
 		out[Type] = desc.Type
 		out[Format] = desc.Format
-		out[Example] = desc.Example
+		if desc.Example != "" {
+			out[Example] = desc.Example
+		}
 		out[Description] = desc.Description
 	}
 
